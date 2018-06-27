@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
     spec.summary        = "Currency conversion library"
     spec.authors        = ["James Willock"]
     spec.email          = "james.willock@gmail.com"
-    spec.files          = ["lib/exhange_rate.rb"]
+    spec.files          = Dir['**/*'].keep_if { |file| File.file?(file) }
     spec.homepage       = "https://github.com/niceguyjames"
     spec.license        = "MIT"
     spec.require_paths  = ["lib"]

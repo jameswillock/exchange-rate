@@ -9,9 +9,9 @@ module ExchangeRate
       def rates(date = nil)
         if date
           dates.elements["Cube[@time='#{date}']"].map do |rate|
-          raise FormatError, "Unexpected third party format" unless rate["currency"] && rate["rate"]
-          rate(date, rate["currency"], rate["rate"].to_f)
-        end
+            raise FormatError, "Unexpected third party format" unless rate["currency"] && rate["rate"]
+            rate(date, rate["currency"], rate["rate"].to_f)
+          end
         else
           dates.elements.flat_map do |date|
             date.elements.map do |rate|
