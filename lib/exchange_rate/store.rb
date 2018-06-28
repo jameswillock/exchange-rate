@@ -1,33 +1,42 @@
+require 'redis'
+
 module ExchangeRate
-  module Store
-    def self.redis
-      ExchangeRate.configuration.redis
+  class Store
+    def initialize(redis_config = {})
+      @redis_config = redis_config
     end
 
-    def self.provider
-      ExchangeRate.configuration.provider
-    end
-
-    def self.set_from_provider(date = nil)
-      provider.rates(date).map do |provider_rate|
-        ExchangeRate::Rate.new(
-          date: provider_rate[:date],
-          currency: provider_rate[:currency],
-          rate: provider_rate[:rate]
-        ).tap { |rate| set_rate(rate) }
+    def set_rate(rate)
+      if redis.set("#{rate.date}.#{rate.currency}", rate.rate) == "OK"
+        true
+      else
+        raise ExchangeRate::DataStoreError, "Failed to save rate"
       end
     end
 
-    def self.set_rate(rate)
-      redis.set("#{rate.date}.#{rate.currency}", rate.rate)
+    def get_rate(date, currency)
+      # Obvious optimisation: this is only ever going to get slower –
+      # could be easily sidestepped with SQL, but the list will only 
+      # grow by 260 keys a year presently
+      date = redis.keys("*.#{currency}").map { |key| Date.parse(key[0..9]) }.sort.last
+
+      raise(
+        ExchangeRate::NoRateError, "No rate found for #{currency}"
+      ) unless date
+
+      ExchangeRate::Rate.new(
+        date: date,
+        currency: currency,
+        rate: redis.get("#{date}.#{currency}").to_f
+      )
     end
 
-    def self.get_rate(date, currency)
-      rate = redis.get("#{date}.#{currency}") 
-      
-      raise ExchangeRate::NoRateError, "No rate found for #{currency} at #{date}" unless rate
+    private
 
-      Rate.new(date: date, currency: currency, rate: rate.to_f)
+    attr_reader :redis_config
+
+    def redis
+      @redis ||= Redis.new(redis_config)
     end
   end
 end

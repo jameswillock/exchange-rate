@@ -1,9 +1,6 @@
-require "redis"
-
 module ExchangeRate
   class Configuration
     attr_accessor :redis_host, :redis_port, :redis_db
-    attr_writer :redis
     attr_reader :providers
 
     def initialize
@@ -11,7 +8,7 @@ module ExchangeRate
     end
 
     def register_provider(sym, klass)
-      @providers.merge!("#{sym}".to_sym => klass)
+      @providers[sym] = klass
     end
 
     def provider
@@ -22,12 +19,12 @@ module ExchangeRate
       @provider = @providers[sym].new
     end
 
-    def redis
-      @redis ||= Redis.new(redis_configuration)
+    def redis_config
+      { host: redis_host, port: redis_port, db: redis_db }.compact
     end
 
-    def redis_configuration
-      { host: redis_host, port: redis_port, db: redis_db }.compact
+    def store
+      @store ||= ExchangeRate::Store.new(redis_config)
     end
   end
 end

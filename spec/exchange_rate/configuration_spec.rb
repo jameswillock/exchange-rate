@@ -41,7 +41,7 @@ RSpec.describe ExchangeRate::Configuration do
     end
   end
 
-  describe "#redis_configuration" do
+  describe "#redis_config" do
     context "when configuration is provided" do
       before do
         config.redis_host = "some-random-host"
@@ -50,7 +50,7 @@ RSpec.describe ExchangeRate::Configuration do
       end
 
       it "preserves the configuration" do
-        expect(config.redis_configuration).to match(
+        expect(config.redis_config).to match(
           host: "some-random-host", port: 1234, db: 1
         )
       end
@@ -58,7 +58,7 @@ RSpec.describe ExchangeRate::Configuration do
     
     context "when configuration is not provided" do
       it "returns an empty configuration" do
-        expect(config.redis_configuration).to be_empty
+        expect(config.redis_config).to be_empty
       end
     end
   end
