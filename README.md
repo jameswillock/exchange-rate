@@ -52,7 +52,7 @@ ExchangeRate::DataStoreError
 ExchangeRate::NoRateError
 ```
 
-Calculating exchange rates is simple:
+Calculating exchange rates is simple. The caller is responsible for adding their own precision as their UI dictates:
 ```ruby
 # calculate.rb
 
@@ -124,3 +124,14 @@ A few "gotchas" were identified during development, and have relevant test cases
 The library is designed to follow the single responsibility principle, and as such has concerns which represent the different areas of behaviour.
 
 ![Architecture diagram](diagram.png)
+
+### Redis
+The library, in its current state, uses Redis as its datastore. Since there is no relationality to the data presently, Redis is a reasonable candidate for its speed and versatility. In the future, to expand capabilities of the library, it may be desirable to use a SQL datastore instead when time is not at a premium.
+
+### Is this production ready?
+Absolutely not! There are lots of areas that deserve further consideration before putting a library like this into production. This effort attempts to do is pay service to best practice, but is cognizant of the drawbacks:
+
+- More robust error handling for fetching and parsing of third-party documnets
+- More thoroughly-applied type checking for data ingress into the library
+- Further test coverage around edge-cases
+- Consider future datastore solutions
