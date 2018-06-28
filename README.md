@@ -135,3 +135,4 @@ Absolutely not! There are lots of areas that deserve further consideration befor
 - More thoroughly-applied type checking for data ingress into the library
 - Further test coverage around edge-cases
 - Consider future datastore solutions
+- The word "rate" everywhere. Names are hard!
