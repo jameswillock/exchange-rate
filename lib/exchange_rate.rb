@@ -6,7 +6,6 @@ require "exchange_rate/providers/base_provider"
 require "exchange_rate/providers/euro_central_bank"
 require "exchange_rate/sync"
 
-
 module ExchangeRate
   def self.at(date, currency, counter_currency)
     rate_for(date, counter_currency) / rate_for(date, currency)
