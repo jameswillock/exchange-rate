@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name           = "exchange-rate"
   spec.version        = "0.0.1"
-  spec.date           = "2018-06-27"
+  spec.date           = "2018-06-28"
   spec.summary        = "Currency conversion library"
   spec.authors        = ["James Willock"]
   spec.email          = "james.willock@gmail.com"
