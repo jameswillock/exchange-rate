@@ -9,24 +9,25 @@ module ExchangeRate
       def rates(date = nil)
         nodes_for(date).flat_map do |node|
           node.map do |rate|
-            raise(FormatError, "Unexpected third party format") unless node["time"] && rate["currency"] && rate["rate"] 
-            format_rate(node["time"], rate["currency"], rate["rate"])
+            if node[:time] && rate[:currency] && rate[:rate]
+              rate(node[:time], rate[:currency], rate[:rate])
+            else
+              raise(ParseError, "Unexpected third party format")
+            end
           end
         end
       end
 
       private
 
-      def nodes_for(date)
-        if date
-          [dates.elements["Cube[@time='#{date}']"]] || raise(ParseError, "No rates for #{date} available")
-        else
-          dates.children
-        end
+      def rate(date, currency, rate)
+        { date: Date.parse(date), currency: currency, rate: rate.to_f }
       end
 
-      def format_rate(date, currency, rate)
-        { date: Date.parse(date), currency: currency, rate: rate.to_f }
+      def nodes_for(date)
+        return dates.children if date.nil?
+        elements = dates.elements["Cube[@time='#{date}']"]
+        elements ? [elements] : raise(NoRateError, "No rates for #{date} available")
       end
 
       def dates

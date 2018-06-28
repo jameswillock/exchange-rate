@@ -1,3 +1,4 @@
+require "dotenv/load"
 require "exchange_rate/exceptions"
 require "exchange_rate/configuration"
 require "exchange_rate/rate"

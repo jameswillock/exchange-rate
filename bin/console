@@ -5,9 +5,9 @@ require "exchange_rate"
 require "pry"
 
 ExchangeRate.configure do |config|
-  config.redis_host = "localhost"
-  config.redis_port = 6379
-  config.redis_db = 15
+  config.redis_host = ENV.fetch("ER_REDIS_HOST", "localhost")
+  config.redis_port = ENV.fetch("ER_REDIS_PORT", 6379)
+  config.redis_db = ENV.fetch("ER_REDIS_DB", 1)
 end
 
 Pry.start

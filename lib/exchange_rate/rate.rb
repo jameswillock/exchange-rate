@@ -1,4 +1,3 @@
-require 'dry-types'
 require 'dry-struct'
 
 module ExchangeRate
